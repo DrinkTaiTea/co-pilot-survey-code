@@ -8,7 +8,7 @@ def generate_survey():
     survey = ss.StreamlitSurvey()
     for i in range(1, 11):
         question = f"Question {i}"
-        options = list(range(1, 11))
+        options = tuple(range(1, 11))
         survey.radio(question, options)
     return survey
 

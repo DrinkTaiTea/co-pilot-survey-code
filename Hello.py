@@ -21,7 +21,7 @@ def generate_responses():
 def visualize_results(responses):
     fig1 = px.pie(responses.mean(), values=responses.mean(), names=responses.columns,
                   title="Average Response per Question")
-    fig2 = px.scatter_geo(responses.reset_index(), locations="state", color="state",
+    fig2 = px.scatter_geo(responses.reset_index(), locationmode='USA-states', locations="index", color="state",
                            hover_name="index", size="index",
                            projection="albers usa", title="Responses by State")
     st.plotly_chart(fig1)

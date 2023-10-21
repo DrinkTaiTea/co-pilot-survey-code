@@ -4,4 +4,4 @@ pandas
 pydeck
 streamlit
 streamlit_survey
-plotly.expres
+plotly.express

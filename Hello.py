@@ -1,5 +1,5 @@
 import streamlit as st
-import streamlit-survey as ss
+import streamlit_survey as ss
 import pandas as pd
 import numpy as np
 import plotly.express as px

@@ -1,51 +1,44 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
+import streamlit_survey as ss
+import pandas as pd
+import numpy as np
+import plotly.express as px
 
-LOGGER = get_logger(__name__)
+def generate_survey():
+    survey = ss.StreamlitSurvey()
+    for i in range(1, 11):
+        question = f"Question {i}"
+        options = list(range(1, 11))
+        survey.radio(question, options)
+    return survey
 
+def generate_responses():
+    responses = []
+    for i in range(30):
+        response = np.random.randint(1, 11, size=10)
+        responses.append(response)
+    return pd.DataFrame(responses)
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+def visualize_results(responses):
+    fig1 = px.pie(responses.mean(), values=responses.mean(), names=responses.columns,
+                  title="Average Response per Question")
+    fig2 = px.scatter_geo(responses.reset_index(), locations="state", color="state",
+                           hover_name="index", size="index",
+                           projection="albers usa", title="Responses by State")
+    st.plotly_chart(fig1)
+    st.plotly_chart(fig2)
 
-    st.write("# Welcome to Streamlit! 👋")
-
-    st.sidebar.success("Select a demo above.")
-
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
-
+def main():
+    st.set_page_config(page_title="Survey", page_icon=":pencil2:")
+    st.title("Survey")
+    st.write("Please answer the following questions:")
+    survey = generate_survey()
+    if survey.submit_button():
+        responses = generate_responses()
+        visualize_results(responses)
+        st.write("Thank you for your response!")
+        st.write("Here are the results:")
+        st.dataframe(responses)
 
 if __name__ == "__main__":
-    run()
+    main()

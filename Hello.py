@@ -1,15 +1,14 @@
 import streamlit as st
-import streamlit_survey as ss
 import pandas as pd
 import numpy as np
 import plotly.express as px
 
 def generate_survey():
-    survey = ss.StreamlitSurvey()
+    survey = {}
     for i in range(1, 11):
         question = f"Question {i}"
-        options = tuple(range(1, 11))
-        survey.radio(question, options)
+        options = list(range(1, 11))
+        survey[question] = st.radio(question, options)
     return survey
 
 def generate_responses():
@@ -33,7 +32,7 @@ def main():
     st.title("Survey")
     st.write("Please answer the following questions:")
     survey = generate_survey()
-    if survey.submit_button():
+    if st.button("Submit"):
         responses = generate_responses()
         visualize_results(responses)
         st.write("Thank you for your response!")
